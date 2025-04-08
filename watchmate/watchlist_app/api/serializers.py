@@ -1,16 +1,18 @@
 from rest_framework import serializers
 from watchlist_app.models import WatchList,SteramPlatform
 
-
-class StreamPlatformSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=SteramPlatform
-        fields='__all__'
-        
+     
 class WatchListSerializer(serializers.ModelSerializer):
     class Meta:
         model=WatchList
         fields='__all__'
+        
+class StreamPlatformSerializer(serializers.ModelSerializer):
+    watchlist=WatchListSerializer(many=True,read_only=True)
+    class Meta:
+        model=SteramPlatform
+        fields='__all__'
+        
         # fields=['id', 'name', 'description']
         # exclude=['name']  # 'active' field is excluded from the returned data, but included in the validated data]
         
