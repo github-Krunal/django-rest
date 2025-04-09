@@ -63,7 +63,7 @@ class WatchListAv(APIView):
         else:
             return Response(serializer.errors)
         
-class MovieDetailAv(APIView):
+class WatchDetailAv(APIView):
     
     def get(self, request, movie_id):
         try:

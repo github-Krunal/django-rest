@@ -13,9 +13,9 @@ class SteramPlatform(models.Model):
 class WatchList(models.Model):
     title=models.CharField(max_length=100)
     storyline=models.CharField(max_length=200)
+    platform=models.ForeignKey(SteramPlatform, on_delete=models.CASCADE,related_name="watchlist")
     active=models.BooleanField(default=True)
     created=models.DateTimeField(auto_now_add=True)
-    platform=models.ForeignKey(SteramPlatform, on_delete=models.CASCADE,related_name="watchlist")
     
     def __str__(self):
         return self.title
