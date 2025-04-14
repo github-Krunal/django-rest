@@ -9,7 +9,7 @@ urlpatterns = [
     path("stream/",StreamPlatformAv.as_view(),name="stream-list"),  # Include watchlist_app URLs
     path("stream/<int:stream_id>/",StreamPlatformDetailAv.as_view(),name="stream-details"),  # Include watchlist_app URLs
     
-    path('review',ReviewList.as_view(),name="review-list"),
+    path('review/',ReviewList.as_view(),name="review-list"),
     path('review/<int:pk>/',ReviewDetail.as_view(),name="review-detail")
     
 ]
