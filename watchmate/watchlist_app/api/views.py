@@ -6,7 +6,31 @@ from watchlist_app.models import WatchList,SteramPlatform,Review
 from watchlist_app.api.serializers import WatchListSerializer,StreamPlatformSerializer,ReviewSerializer
 # from rest_framework import mixins
 from rest_framework import generics
+from django.shortcuts import get_object_or_404
+from rest_framework import viewsets
 
+
+class StreamPlatformVS(viewsets.ViewSet):
+
+    def list(self, request):
+        queryset = SteramPlatform.objects.all()
+        serializer = StreamPlatformSerializer(queryset, many=True,context={'request': request})
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = SteramPlatform.objects.all()
+        watchlist = get_object_or_404(queryset, pk=pk)
+        serializer = StreamPlatformSerializer(watchlist)
+        return Response(serializer.data)
+
+    def create(self, request):
+        serializer = StreamPlatformSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
+    
 class ReviewCreate(generics.CreateAPIView):
     serializer_class=ReviewSerializer
     
@@ -44,6 +68,7 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 
 #     def post(self, request, *args, **kwargs):
 #         return self.create(request, *args, **kwargs)
+
 
 class StreamPlatformAv(APIView):
     

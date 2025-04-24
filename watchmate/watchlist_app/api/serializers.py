@@ -13,14 +13,14 @@ class WatchListSerializer(serializers.ModelSerializer):
         model=WatchList
         fields='__all__'
         
-class StreamPlatformSerializer(serializers.HyperlinkedModelSerializer):
+class StreamPlatformSerializer(serializers.ModelSerializer):
     # watchlist=WatchListSerializer(many=True,read_only=True)
     # watchlist=serializers.StringRelatedField(many=True)
     # watchlist=serializers.HyperlinkedRelatedField(many=True,read_only=True,view_name='movie-detail',lookup_url_kwarg='movie_id')
-    watchlist=serializers.HyperlinkedRelatedField(many=True,read_only=True,view_name='movie-detail',lookup_url_kwarg='movie_id')
+    watchlist = WatchListSerializer(many=True, read_only=True)
     class Meta:
-        model=SteramPlatform
-        fields='__all__'
+        model = SteramPlatform
+        fields = "__all__"
         
         # fields=['id', 'name', 'description']
         # exclude=['name']  # 'active' field is excluded from the returned data, but included in the validated data]
