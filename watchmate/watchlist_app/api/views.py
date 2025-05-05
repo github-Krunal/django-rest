@@ -8,36 +8,49 @@ from watchlist_app.api.serializers import WatchListSerializer,StreamPlatformSeri
 from rest_framework import generics
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
+from rest_framework.exceptions import ValidationError
 
 
-class StreamPlatformVS(viewsets.ViewSet):
+class StreamPlatformVS(viewsets.ReadOnlyModelViewSet):
+      queryset = SteramPlatform.objects.all()
+      serializer_class = StreamPlatformSerializer
 
-    def list(self, request):
-        queryset = SteramPlatform.objects.all()
-        serializer = StreamPlatformSerializer(queryset, many=True,context={'request': request})
-        return Response(serializer.data)
+# class StreamPlatformVS(viewsets.ViewSet):
 
-    def retrieve(self, request, pk=None):
-        queryset = SteramPlatform.objects.all()
-        watchlist = get_object_or_404(queryset, pk=pk)
-        serializer = StreamPlatformSerializer(watchlist)
-        return Response(serializer.data)
+#     def list(self, request):
+#         queryset = SteramPlatform.objects.all()
+#         serializer = StreamPlatformSerializer(queryset, many=True,context={'request': request})
+#         return Response(serializer.data)
 
-    def create(self, request):
-        serializer = StreamPlatformSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors)
+#     def retrieve(self, request, pk=None):
+#         queryset = SteramPlatform.objects.all()
+#         watchlist = get_object_or_404(queryset, pk=pk)
+#         serializer = StreamPlatformSerializer(watchlist)
+#         return Response(serializer.data)
+
+#     def create(self, request):
+#         serializer = StreamPlatformSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         else:
+#             return Response(serializer.errors)
     
 class ReviewCreate(generics.CreateAPIView):
     serializer_class=ReviewSerializer
     
+    def get_queryset(self):
+        return Review.objects.all()
+    
     def perform_create(self,serializer):
         pk=self.kwargs.get('pk')
         movie=WatchList.objects.get(pk=pk)
-        serializer.save(watchList=movie)
+        
+        review_user=self.request.user
+        review_queryset=Review.objects.filter(watchList=movie,review_user=review_user)
+        if review_queryset.exists():
+            raise ValidationError("you already review this")
+        serializer.save(watchList=movie,review_user=review_user)
         
 class ReviewList(generics.ListAPIView):
     # queryset=Review.objects.all()
