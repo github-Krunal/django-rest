@@ -9,7 +9,7 @@ from rest_framework import generics
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
-
+from rest_framework.permissions import IsAuthenticated
 
 class StreamPlatformVS(viewsets.ReadOnlyModelViewSet):
       queryset = SteramPlatform.objects.all()
@@ -55,6 +55,7 @@ class ReviewCreate(generics.CreateAPIView):
 class ReviewList(generics.ListAPIView):
     # queryset=Review.objects.all()
     serializer_class=ReviewSerializer
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         pk=self.kwargs['pk']
